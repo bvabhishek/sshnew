@@ -14,10 +14,29 @@ echo ""
 cd /root/abhishek/sshnew
 
 # Stop and remove existing container
-echo "[1/4] Cleaning up existing containers..."
+echo "[1/4] Cleaning up existing containers and port conflicts..."
 docker stop vulnerable-ssh-server 2>/dev/null || true
 docker rm vulnerable-ssh-server 2>/dev/null || true
 docker rmi vulnerable-ssh-server 2>/dev/null || true
+
+# Find and stop any container using port 2222
+PORT_CONTAINER=$(docker ps -q --filter "publish=2222")
+if [ ! -z "$PORT_CONTAINER" ]; then
+    echo "Found container using port 2222: $PORT_CONTAINER"
+    docker stop $PORT_CONTAINER
+    docker rm $PORT_CONTAINER
+fi
+
+# Check if port is still in use by non-Docker process
+if lsof -Pi :2222 -sTCP:LISTEN -t >/dev/null 2>&1; then
+    echo "⚠ Port 2222 is in use by another process"
+    echo "Finding process using port 2222..."
+    lsof -i :2222
+    echo ""
+    echo "To free the port, run: kill -9 \$(lsof -t -i:2222)"
+    echo "Or use a different port by editing the docker run command"
+fi
+
 echo "✓ Cleanup complete"
 echo ""
 
