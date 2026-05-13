@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  vulnerable-ssh:
+    build: .
+    container_name: vulnerable-ssh-server
+    ports:
+      - "2222:22"
+    hostname: vulnerable-ssh
+    networks:
+      - ssh-test-network
+    restart: unless-stopped
+    volumes:
+      - ./ssh-keys:/ssh-keys:ro
+
+networks:
+  ssh-test-network:
+    driver: bridge
+
+# Made with Bob
