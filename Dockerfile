@@ -27,11 +27,12 @@ RUN echo "# Vulnerable SSH Configuration" > /etc/ssh/sshd_config && \
     echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config && \
     echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config && \
     echo "PermitEmptyPasswords no" >> /etc/ssh/sshd_config && \
+    echo "MaxAuthTries 10" >> /etc/ssh/sshd_config && \
     echo "" >> /etc/ssh/sshd_config && \
-    echo "# Weak Ciphers and MACs" >> /etc/ssh/sshd_config && \
-    echo "Ciphers aes128-cbc,3des-cbc,aes192-cbc,aes256-cbc" >> /etc/ssh/sshd_config && \
-    echo "MACs hmac-md5,hmac-sha1,hmac-ripemd160" >> /etc/ssh/sshd_config && \
-    echo "KexAlgorithms diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1" >> /etc/ssh/sshd_config && \
+    echo "# Weak Ciphers and MACs (compatible with modern OpenSSH)" >> /etc/ssh/sshd_config && \
+    echo "Ciphers aes128-cbc,3des-cbc,aes192-cbc,aes256-cbc,aes128-ctr,aes192-ctr,aes256-ctr" >> /etc/ssh/sshd_config && \
+    echo "MACs hmac-sha1,hmac-sha1-96,hmac-sha2-256,hmac-sha2-512" >> /etc/ssh/sshd_config && \
+    echo "KexAlgorithms diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group-exchange-sha256" >> /etc/ssh/sshd_config && \
     echo "" >> /etc/ssh/sshd_config && \
     echo "# Timing attack vulnerability" >> /etc/ssh/sshd_config && \
     echo "UsePAM yes" >> /etc/ssh/sshd_config && \
